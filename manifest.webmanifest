@@ -1,0 +1,17 @@
+{
+  "name": "Kanji Notebook",
+  "short_name": "漢字ノート",
+  "description": "Learn the 3,000 kanji of Remembering the Kanji with stories, writing practice, spaced review and words.",
+  "start_url": "./index.html#today",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F3F5F2",
+  "theme_color": "#F3F5F2",
+  "lang": "en",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
