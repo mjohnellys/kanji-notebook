@@ -377,17 +377,25 @@ async function mountStrokes(box,ch,auto){
   const ip=paths.map(d=>{const g=document.createElementNS(ns,"path");g.setAttribute("d",d);g.setAttribute("fill","none");g.setAttribute("stroke",ink);g.setAttribute("stroke-width","3.6");g.setAttribute("stroke-linecap","round");g.setAttribute("stroke-linejoin","round");svg.appendChild(g);return g;});
   const glyph=box.querySelector(".glyph");if(glyph)glyph.style.display="none";
   box.querySelector("svg")?.remove();box.appendChild(svg);
-  const play=()=>{
-    const tok=++animToken;const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
-    ip.forEach(p=>{const L=p.getTotalLength();p.style.transition="none";p.style.strokeDasharray=L;p.style.strokeDashoffset=reduce?0:L;});
+  const play=(fromTap)=>{
+    const tok=++animToken;const reduce=fromTap!==true&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+    const lens=ip.map(p=>p.getTotalLength());
+    ip.forEach((p,i)=>{p.style.transition="none";p.style.strokeDasharray=lens[i]+" "+lens[i];p.style.strokeDashoffset=reduce?0:lens[i];});
     if(reduce)return;
-    let i=0;const step=()=>{if(tok!==animToken||i>=ip.length)return;const p=ip[i++];const L=p.getTotalLength();const dur=Math.max(220,L*9);
-      p.getBoundingClientRect();p.style.transition=`stroke-dashoffset ${dur}ms linear`;p.style.strokeDashoffset=0;setTimeout(step,dur+90);};
-    setTimeout(step,150);
+    let i=0,start=null;
+    const frame=t=>{
+      if(tok!==animToken||i>=ip.length)return;
+      if(start===null)start=t+120;
+      const L=lens[i],dur=Math.max(220,L*9);const k=Math.max(0,Math.min(1,(t-start)/dur));
+      ip[i].style.strokeDashoffset=String(L*(1-k));
+      if(k>=1){i++;start=t+90;}
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
   };
-  box.onclick=play;box.title="Tap to replay stroke order";
+  box.onclick=()=>play(true);box.title="Tap to replay stroke order";
   if(auto)play();
-  return play;
+  return ()=>play(true);
 }
 
 /* ---------- drawing pad ---------- */

@@ -1,5 +1,5 @@
 // Kanji Notebook service worker: works offline after the first visit.
-const VERSION = 'kn-v1';
+const VERSION = 'kn-v2';
 const CORE = ['./', './index.html', './data.json', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 const STROKES = Array.from({ length: 30 }, (_, i) => `./strokes/s${String(i).padStart(2, '0')}.json`);
